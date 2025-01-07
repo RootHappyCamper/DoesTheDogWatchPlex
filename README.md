@@ -1,6 +1,6 @@
 Fork of Valknight's original [DoesTheDogWatchPlex](https://github.com/valknight/DoesTheDogWatchPlex) script 
 
-I loved Valknight's idea of adding trigger warnings to Plex descriptions. However, the code was a bit outdated and didn't correctly interact with DTDD.com's updated API anymore. As a newly expecting father, having easy to find content warnings within Plex will be a huge boon.
+I loved Valknight's idea of adding trigger warnings to Plex descriptions. However, the code didn't correctly interact with DTDD.com's updated API anymore. As a newly expecting father, having easy to find content warnings within Plex will be a huge boon.
 
 # DoesTheDogWatchPlex
 
@@ -12,12 +12,14 @@ I loved Valknight's idea of adding trigger warnings to Plex descriptions. Howeve
 This modifies the summaries of movies within Plex to contain content warnings from DoesTheDogDie.com.
 
 ## Why?
+Sometimes, there isn't a theme I want to watch at a given time. Movies don't always clearly communicate what content they have inside of them and while I may be in the mood one day to watch specific content that allows me to think critically of the themes being potrayed, other days I just want to watch a feel good story void of heavy themes. This tool allows users to view at a glance what themes are in a movie without major changes to the Plex interface.
 
+###Original Description:###
 Some of the people using my Plex server (myself included) sometimes go through rough patches, and don't want to stumble into a movie that happens to contain something like, a pet dying, sexual assault, or other things. However, alt-tabbing to DoesTheDogDie.com can get tiresome, so this exists, meaning you can see brief previews of the data from DoesTheDogDie.com without ever leaving the Plex interface.
 
 ## What is the web API?
 
-To speed up requests, a web API wrapper can be used - this is so that, if many different versions of this app are hitting the same API, only one request will need to hit the original DTDD, without having all the different versions have access to the memcache. It also means other tools that wish to use DTDD can also call upon the API, whether that be a proper Plex agent, or some other tool for you Jellyfin weirdos.
+The Web API is provided directly by [DoesTheDogDie.com](https://www.doesthedogdie.com/api). You will have to create an account and find your API token on your profile page. Once you do you will have to copy and paste your API token into the config.py file under dtdd_api_key.
 
 ## How to get started (CLI tools)
 
@@ -28,7 +30,7 @@ To speed up requests, a web API wrapper can be used - this is so that, if many d
 4. Once this file is generated, check over it, and **make a Plex Media Server database backup** (from this point on, all metadata changes will be permanent to your server)
 5. Run `python write_to_plex.py`
 
-To update the content warnings, run build_json.py again, and then write_to_plex.py - anything below the line reading `doesthedogdie: ` will simply be removed, and replaced with the new updated content warnings (anything above shouldn't be touched)
+To update the content warnings, run build_json.py again, and then write_to_plex.py - anything below the line reading `Content Warnings: ` will simply be removed, and replaced with the new updated content warnings (anything above shouldn't be touched)
 
 ## Plans
 
@@ -39,11 +41,12 @@ To update the content warnings, run build_json.py again, and then write_to_plex.
 - Allow user to run daily, weekly, or on a set schedule
 - Jellyfin support
 - IMDB parental support
+- Allow user to only be warned about content they specficy instead of all "yes's" from doesthedogdie.com
 
 ## LICENSE
 
 This project is licensed under the MIT license.
 
 ## Credit
-[Valknight](https://github.com/valknight) for the original script and idea
-[Yacn](https://github.com/yacn) for original dockerfile for Valknight's script 
+[Valknight](https://github.com/valknight) for the original script and idea <br />
+[Yacn](https://github.com/yacn) for original dockerfile for Valknight's script <br /> 

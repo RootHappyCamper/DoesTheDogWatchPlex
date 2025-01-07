@@ -1,3 +1,7 @@
+Fork of Valknight's original DoesTheDogWatchPlex script https://github.com/valknight/DoesTheDogWatchPlex
+
+I loved Valknight's idea of adding trigger warnings to Plex descriptions. However, the code was a bit outdated and didn't correctly interact with DTDD.com's updated API anymore. As a newly expecting father, having easy to find content warnings within Plex will be a huge boon.
+
 # DoesTheDogWatchPlex
 
 > An integration of DoesTheDogDie.com and Plex Media Server
@@ -5,7 +9,7 @@
 ![Demonstration of DoesTheDogWatchPlex using Marvel's Infinity War](/screenshots/1.png)
 ## What does this do?
 
-This modifies the summaries of movies to contain content warnings from DoesTheDogDie.com.
+This modifies the summaries of movies within Plex to contain content warnings from DoesTheDogDie.com.
 
 ## Why?
 
@@ -14,8 +18,6 @@ Some of the people using my Plex server (myself included) sometimes go through r
 ## What is the web API?
 
 To speed up requests, a web API wrapper can be used - this is so that, if many different versions of this app are hitting the same API, only one request will need to hit the original DTDD, without having all the different versions have access to the memcache. It also means other tools that wish to use DTDD can also call upon the API, whether that be a proper Plex agent, or some other tool for you Jellyfin weirdos.
-
-I recommend you use the API that is set in the example config (dtdd.valknight.xyz), as that means the more users there are, the more likely your requested media is to be cached, however, if you are privacy conscious, you can setup your own, or avoid the web API solution altogether.
 
 ## How to get started (CLI tools)
 
@@ -28,23 +30,15 @@ I recommend you use the API that is set in the example config (dtdd.valknight.xy
 
 To update the content warnings, run build_json.py again, and then write_to_plex.py - anything below the line reading `doesthedogdie: ` will simply be removed, and replaced with the new updated content warnings (anything above shouldn't be touched)
 
-## How to get started (DTDD web API wrapper)
-
-This will run the server in a debug mode. For production, please look up the recommended way to run a Flask app in production for your platform and requirements.
-
-0. Install python 3.4+ and create a virtual environment for this
-
-Recommended: setup memcache - this will greatly improve performance
-
-1. Execute `pip install -r requirements.txt`
-2. Copy config.py.example to config.py, and fill out the data with what is relevant to your setup
-3. Run `python dtdd_apip.py`
-
 ## Plans
 
 - TV series support
-- Moving to an agent instead of this hacky setup
-- Customizing splitter between the actual summary and content warnings
+- Cleaning up original code to remove memcaching via Flask app
+- Adding SQL database so API doesn't have to be called for every movie every time script is run
+- Deployment via Docker container
+- Allow user to run daily, weekly, or on a set schedule
+- Jellyfin support
+- IMDB parental support
 
 ## LICENSE
 

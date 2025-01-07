@@ -14,7 +14,7 @@ This modifies the summaries of movies within Plex to contain content warnings fr
 ## Why?
 Sometimes, there isn't a theme I want to watch at a given time. Movies don't always clearly communicate what content they have inside of them and while I may be in the mood one day to watch specific content that allows me to think critically of the themes being potrayed, other days I just want to watch a feel good story void of heavy themes. This tool allows users to view at a glance what themes are in a movie without major changes to the Plex interface.
 
-###Original Description:###
+### Original Description: ###
 Some of the people using my Plex server (myself included) sometimes go through rough patches, and don't want to stumble into a movie that happens to contain something like, a pet dying, sexual assault, or other things. However, alt-tabbing to DoesTheDogDie.com can get tiresome, so this exists, meaning you can see brief previews of the data from DoesTheDogDie.com without ever leaving the Plex interface.
 
 ## What is the web API?

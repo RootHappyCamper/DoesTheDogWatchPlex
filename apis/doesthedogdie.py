@@ -23,6 +23,7 @@ try:
 except ImportError:
     dtdd_api_enabled = False
 
+
 if not (dtdd_api_enabled):
     print("⚠ DTDD's api is recommended for performance reasons")
 try:
@@ -90,16 +91,19 @@ def get_info(media_id):
     
 def search(search_string):
     search_string = search_string.lower()
-    search_string = urllib.parse.quote_plus(search_string)
-    url = 'https://www.doesthedogdie.com/search?q={}'.format(search_string)
+#    search_string = urllib.parse.quote(search_string)
+    url = 'https://www.doesthedogdie.com/dddsearch?q={}'.format(search_string)
     if dtdd_api_enabled:
+        print("API function running")
         search_request = requests.get(url, headers=api_headers)
         resp = json.loads(search_request.text).get('items', [])
-        
+        print(url)
+        print(search_request)
         if len(resp) == 0:
             return None
         return "media/{}".format(resp[0].get('id', None))
     else:
+        print("The stupid function is running")
         search_request = requests.get(url, headers={"X-Requested-With":"XMLHttpRequest", 'X-Note': 'I am using DoesTheDogWatchPlex without using the official API.'})
         soup = BeautifulSoup(search_request.text, 'lxml')
         names = soup.select('.name')
@@ -115,29 +119,14 @@ def search(search_string):
 def get_info_for_movie(movie_name, use_cache=True):
     movie_name = movie_name.lower()
     movie_name = urllib.parse.quote_plus(movie_name)
-    if use_cache and use_memcache: # use_memcache is the global config, use_cache is if we don't want to hit the cache on this occasion
-        data = client.get(movie_name)
-        invalid = False
-        if data is None:
-            invalid = True
-        else:
-            try:
-                data =  json.loads(data)
-                if int(data['time_retrieved']) - time.time() > invalidation_time:
-                    invalid = True
-                else:
-                    data = data['data']
-            except:
-                invalid = True
+#    print("Movie name for get info for movie is:" + movie_name)
+
+    print("Looking for " + movie_name)
+    key = search(movie_name)
+    if key is not None:
+        data = get_info(key)
+        if use_memcache: # this allows us to force refresh data if we want
+            client.set(movie_name, json.dumps(dict(data=data, time_retrieved=int(time.time()))))
     else:
-        invalid = True
-    
-    if invalid or not(use_cache):
-        key = search(movie_name)
-        if key is not None:
-            data = get_info(key)
-            if use_memcache: # this allows us to force refresh data if we want
-                client.set(movie_name, json.dumps(dict(data=data, time_retrieved=int(time.time()))))
-        else:
-            data = None
+        data = None
     return data

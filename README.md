@@ -1,4 +1,4 @@
-Fork of Valknight's original DoesTheDogWatchPlex script https://github.com/valknight/DoesTheDogWatchPlex
+Fork of Valknight's original [DoesTheDogWatchPlex](https://github.com/valknight/DoesTheDogWatchPlex) script 
 
 I loved Valknight's idea of adding trigger warnings to Plex descriptions. However, the code was a bit outdated and didn't correctly interact with DTDD.com's updated API anymore. As a newly expecting father, having easy to find content warnings within Plex will be a huge boon.
 
@@ -43,3 +43,7 @@ To update the content warnings, run build_json.py again, and then write_to_plex.
 ## LICENSE
 
 This project is licensed under the MIT license.
+
+## Credit
+[Valknight](https://github.com/valknight) for the original script and idea
+[Yacn](https://github.com/yacn) for original dockerfile for Valknight's script 

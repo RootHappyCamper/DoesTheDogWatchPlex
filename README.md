@@ -6,7 +6,7 @@ I loved Valknight's idea of adding trigger warnings to Plex descriptions. Howeve
 
 > An integration of DoesTheDogDie.com and Plex Media Server
 
-![Demonstration of DoesTheDogWatchPlex using Marvel's Infinity War](/screenshots/1.png)
+![Demonstration of DoesTheDogWatchPlex using All Dog's Go To Heaven](/screenshots/2.png)
 ## What does this do?
 
 This modifies the summaries of movies within Plex to contain content warnings from DoesTheDogDie.com.

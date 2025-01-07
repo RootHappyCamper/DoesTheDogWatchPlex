@@ -5,6 +5,7 @@ import requests
 import urllib.parse
 
 from tqdm import tqdm
+
 try:
     from config import only_show_yes
 except:
@@ -43,6 +44,8 @@ def yes_or_no_formatter(topic):
     return "{topic} : {action} (Yes: {yes_votes} | No : {no_votes})\n".format(topic=topic['topic'], yes_votes=topic['yes_votes'], no_votes=topic['no_votes'], action=action), action, topic['topic_short']
 
 def main():
+    movies_in_list=0
+    movies_found=0
     print("⬇ Getting movies from Plex")
     movies = get_movies_and_format()
 
@@ -54,13 +57,17 @@ def main():
         if not use_memcache:
             print("⚠ You aren't using a memcache or an external API for DTDD - this will take a while")
     for movie in tqdm(movies):
+        movies_in_list += 1
         if use_dtdd_web_api:
+            print("use_dttd_web_api statement is running")
             resp = requests.get("{}/media/{}".format(dtdd_web_api_address, movie['title']))
             if resp.status_code == 200:
                 movie['dtdd'] = json.loads(resp.text)
+                movies_found += 1
             else:
                 movie['dtdd'] = None
         else:
+            print("Running get info for movie on " + movie['title'])
             movie['dtdd'] = get_info_for_movie(movie['title'])
         movie['statuses'] = []
 
@@ -74,7 +81,7 @@ def main():
         to_write.append(movie)
 
     # all we need to do now is chuck it in a big ol' json file
-
+    print("Found " + str(movies_found) + "Movies out of " + str(movies_in_list))
     print("✏ Writing to JSON file")
     with open("movies.json", "w") as f:
         f.write(json.dumps(to_write, indent=4))

@@ -1,0 +1,12 @@
+token = "##########" # your API token - find here https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
+url = "###########" # the URL at which your server can be accessed
+use_memcache =  False
+memcache_address = 'localhost'
+memcache_port =  11211
+invalidation_time = 86400 # this is the time we can store something in memcache before it is known as invalid
+use_dtdd_web_api = True
+#dtdd_web_api_address = "https://www.doesthedogdie.com" # this is the address the dtdd_api can be found at
+use_short_names = True # this will simply put out what does match as a list on a single line, instead of the full question
+dtdd_api_key = "###############" #Found on your profile page https://www.doesthedogdie.com/profile
+dtdd_api_enabled = True # if this is disabled, we will use the old, slower, and less useful web scraper
+only_show_yes = True

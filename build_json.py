@@ -3,29 +3,26 @@ from apis.plex import get_movies_and_format
 import json
 import requests
 import urllib.parse
+import argparse
 
 from tqdm import tqdm
 
-try:
-    from config import only_show_yes
-except:
-    print("⚠ Please set only_show_yes in your config.py")
-    only_show_yes = False
-try:
-    from config import use_memcache
-except:
-    use_memcache = False
-try:
-    from config import use_dtdd_web_api
-    if use_dtdd_web_api:
-        try:
-            from config import dtdd_web_api_address
-        except ImportError:
-            print("⚠ Please set dtdd_web_api_address in your config.py")
-            use_dtdd_web_api = False
-except:
-    print("⚠ Please set use_dtdd_web_api in your config.py")
-    use_dtdd_web_api = False
+use_memcache = False
+use_dtdd_web_api = False
+only_show_yes = True
+
+#Arguement Parsing
+parser = argparse.ArgumentParser(description="Add content warnings to Plex descriptions using data from DoesTheDogDie.com")
+
+parser.add_argument("-u", "--update-all", action='store_true', help="Forces the script to update all movies found in Plex, instead of skipping movies already found.")
+parser.add_argument("-v", "--verbose", action='store_true', help="Prints debugging messages to console")
+
+args = parser.parse_args()
+
+if args.verbose:
+    print("Verbose mode enabled")
+if args.update_all:
+    print("Updating all items in library")
 
 try:
     from config import use_short_names
@@ -48,32 +45,21 @@ def main():
     movies_found=0
     print("⬇ Getting movies from Plex")
     movies = get_movies_and_format()
-
     to_write = []
-    if use_dtdd_web_api:
-        print("⏩ Getting data from faster web API")
-    else:
-        print("🐶 Getting data from DoesTheDogDie.com")
-        if not use_memcache:
-            print("⚠ You aren't using a memcache or an external API for DTDD - this will take a while")
+    print("🐶 Getting data from DoesTheDogDie.com")
     for movie in tqdm(movies):
+        if args.update_all is not True:
+            if movie['has_tag'] == "True":
+                if args.verbose is True:
+                    print("Movie " + movie['title'] + " already has content warning. Skipping...")
+                continue
         movies_in_list += 1
-        if use_dtdd_web_api:
-            print("use_dttd_web_api statement is running")
-            resp = requests.get("{}/media/{}".format(dtdd_web_api_address, movie['title']))
-            if resp.status_code == 200:
-                movie['dtdd'] = json.loads(resp.text)
-                movies_found += 1
-            else:
-                movie['dtdd'] = None
-        else:
+        if args.verbose is True:
             print("Running get info for movie on " + movie['title'])
-            movie['dtdd'] = get_info_for_movie(movie['title'])
+        movie['dtdd'] = get_info_for_movie(movie['title'])
         movie['statuses'] = []
-
-        # we preformat all the strings for later, so we can quickly retrieve them (meaning the writer has little logic attached to DTDD)
-
         if movie['dtdd'] != None:
+            movies_found += 1
             for raw_status in movie['dtdd']:
                 yes_or_no = yes_or_no_formatter(raw_status)
                 if (not only_show_yes) or (yes_or_no[1] == "Yes"):
@@ -81,7 +67,7 @@ def main():
         to_write.append(movie)
 
     # all we need to do now is chuck it in a big ol' json file
-    print("Found " + str(movies_found) + "Movies out of " + str(movies_in_list))
+    print("Found " + str(movies_found) + " Movies out of " + str(movies_in_list))
     print("✏ Writing to JSON file")
     with open("movies.json", "w") as f:
         f.write(json.dumps(to_write, indent=4))

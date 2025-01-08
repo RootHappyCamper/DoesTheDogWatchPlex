@@ -4,46 +4,27 @@ import requests
 import time
 import json
 
+use_memcache = False
 
 try:
     from config import dtdd_api_enabled
     try:
         from config import dtdd_api_key
         api_headers = {'Accept' :'application/json', 'X-API-KEY': dtdd_api_key}
-        check_request = requests.get('https://www.doesthedogdie.com/search?q=old%20yeller', headers=api_headers)
+        check_request = requests.get('https://www.doesthedogdie.com/dddsearch?q=old%20yeller', headers=api_headers)
         try:
             json.loads(check_request.text)
+            print("Connection to DTDD API established. Moving forward...")
         except json.decoder.JSONDecodeError:
-            dtdd_api_enabled = False
-            print("Failed to connect to DTDD's official api. Please check your API key, or disable the DTDD official API module.")
+            print("Failed to connect to DTDD's official api. Please check your API key.")
             exit(1)
     except ImportError:
-        print("Disabled DTDD's official API due to api key not being set.")
-        dtdd_api_enabled = False
+        print("API key not set. Please set your API key in config.py.")
+        exit(1)
 except ImportError:
     dtdd_api_enabled = False
+    print("If this has printed, you have run into an unknown error related to importing your API key or connecting to the DTDD official API.")
 
-
-if not (dtdd_api_enabled):
-    print("⚠ DTDD's api is recommended for performance reasons")
-try:
-    from config import use_memcache
-    if  use_memcache:
-        try:
-            from config import memcache_address, memcache_port, invalidation_time
-        except ImportError:
-            print("⚠ Please set memcache_address, memcache_port and invalidation_time in config.py")
-            use_memcache = False
-except ImportError:
-    print("⚠ Please set use_memcache in config.py")
-    use_memcache = False
-
-if use_memcache:
-    from pymemcache.client import base
-    client = base.Client((memcache_address, memcache_port))
-    print("✅ Established memcache client")
-else:
-    print("⚠ memcache is disabled - we recommend you enable it to improve performance")
 
 base_string = "https://www.doesthedogdie.com/{media_id}"
 
@@ -93,28 +74,14 @@ def search(search_string):
     search_string = search_string.lower()
 #    search_string = urllib.parse.quote(search_string)
     url = 'https://www.doesthedogdie.com/dddsearch?q={}'.format(search_string)
-    if dtdd_api_enabled:
-        print("API function running")
-        search_request = requests.get(url, headers=api_headers)
-        resp = json.loads(search_request.text).get('items', [])
-        print(url)
-        print(search_request)
-        if len(resp) == 0:
-            return None
-        return "media/{}".format(resp[0].get('id', None))
-    else:
-        print("The stupid function is running")
-        search_request = requests.get(url, headers={"X-Requested-With":"XMLHttpRequest", 'X-Note': 'I am using DoesTheDogWatchPlex without using the official API.'})
-        soup = BeautifulSoup(search_request.text, 'lxml')
-        names = soup.select('.name')
-        counter = 0
-        while counter < len(names):
-            if "media/" in names[counter]['href']:
-                print(names[counter]['href'])
-                return names[counter]['href']
-            counter += 1
-    
-    return None
+    search_request = requests.get(url, headers=api_headers)
+    resp = json.loads(search_request.text).get('items', [])
+    #print(url)
+    #print(search_request)
+    if len(resp) == 0:
+        return None
+    return "media/{}".format(resp[0].get('id', None))
+
     
 def get_info_for_movie(movie_name, use_cache=True):
     movie_name = movie_name.lower()
@@ -125,8 +92,8 @@ def get_info_for_movie(movie_name, use_cache=True):
     key = search(movie_name)
     if key is not None:
         data = get_info(key)
-        if use_memcache: # this allows us to force refresh data if we want
-            client.set(movie_name, json.dumps(dict(data=data, time_retrieved=int(time.time()))))
+ #       if use_memcache: # this allows us to force refresh data if we want # Old code. Might be useful for SQL database.
+ #           client.set(movie_name, json.dumps(dict(data=data, time_retrieved=int(time.time()))))
     else:
         data = None
     return data

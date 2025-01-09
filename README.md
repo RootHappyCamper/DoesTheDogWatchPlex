@@ -34,14 +34,14 @@ To update the content warnings, run build_json.py again, and then write_to_plex.
 
 ## Plans
 
-- TV series support
-- Cleaning up original code to remove memcaching via Flask app
-- Adding SQL database so API doesn't have to be called for every movie every time script is run
-- Deployment via Docker container
-- Allow user to run daily, weekly, or on a set schedule
-- Jellyfin support
-- IMDB parental support
-- Allow user to only be warned about content they specficy instead of all "yes's" from doesthedogdie.com
+- [X] Cleaning up original code to remove memcaching via Flask app
+- [ ] Adding SQL database so API doesn't have to be called for every movie every time script is run
+- [ ] Deployment via Docker container
+- [ ] Allow user to run daily, weekly, or on a set schedule
+- [ ] Allow user to only be warned about content they specficy instead of all "yes's" from doesthedogdie.com
+- [ ] Jellyfin Support
+- [ ] ~~IMDB parental support~~ IMDB API seems to be a paid for service
+- [ ] TV Series Support
 
 ## LICENSE
 

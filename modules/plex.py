@@ -1,12 +1,11 @@
 from plexapi.server import PlexServer
-from loadconfig import load_config_yaml
+from modules.config import load_config_yaml
 #import yaml
 #from config import token, url
 plex_url = None
 plex_token = None
 
 try: #Try importing keys and url from YAML configuration.
-    import yaml
     config_data = load_config_yaml()
     plex_token = config_data['plex']['token']
     if plex_token == None:
@@ -16,7 +15,7 @@ try: #Try importing keys and url from YAML configuration.
         raise Exception("The token retrieved from the YAML file is empty!")
     plex = PlexServer(plex_url, plex_token)
 except Exception as e:
-    print(f"Ran into exception... Something is wrong with Plex loading configuration from YAML {e}" )
+    print(f"Ran into exception... Something is wrong with Plex loading configuration from YAML: {e}" )
     exit(1)
 except:
     print("Ran into an unknown exception while importing yaml configuration file for Plex...")

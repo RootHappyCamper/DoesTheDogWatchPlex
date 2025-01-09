@@ -2,10 +2,10 @@ import urllib.parse
 import requests
 # import time
 import json
+from modules.config import load_config_yaml
 # import yaml
 
 try:
-    from loadconfig import load_config_yaml
     config_data = load_config_yaml()
     dtdd_api_key = config_data['dtdd']['key']
     api_headers = {'Accept' :'application/json', 'X-API-KEY': dtdd_api_key}
@@ -17,7 +17,7 @@ try:
         print("Failed to connect to DTDD's official api. Please check your API key.")
         exit(1)
 except ImportError:
-    print("API key not set. Please set your API key in config.py.")
+    print("API key not set. Please set your DTDD API key in config.yml.")
     exit(1)
 
 base_string = "https://www.doesthedogdie.com/{media_id}"

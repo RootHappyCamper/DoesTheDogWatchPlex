@@ -1,11 +1,11 @@
-from apis.doesthedogdie import get_info_for_movie
-from apis.plex import get_movies_and_format
-from loadconfig import load_config_yaml
+from modules.doesthedogdie import get_info_for_movie
+from modules.plex import get_movies_and_format
+from modules.config import load_config_yaml
 import json
 import requests
 import urllib.parse
 import argparse
-import yaml
+#import yaml
 
 from tqdm import tqdm
 #Arguement Parsing

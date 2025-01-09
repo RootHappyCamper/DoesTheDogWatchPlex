@@ -35,7 +35,7 @@ To update the content warnings, run build_json.py again, and then write_to_plex.
 ## Plans
 
 - [X] Cleaning up original code to remove memcaching via Flask app
-- [ ] Adding SQL database so API doesn't have to be called for every movie every time script is run
+- [ ] Adding SQL database so API doesn't have to be called for every movie every time script is run (Sort of done. Script has arguements to run if every movie needs to be updated, but wont run for every single movie if it contains the content warning in description)
 - [ ] Deployment via Docker container
 - [ ] Allow user to run daily, weekly, or on a set schedule
 - [ ] Allow user to only be warned about content they specficy instead of all "yes's" from doesthedogdie.com

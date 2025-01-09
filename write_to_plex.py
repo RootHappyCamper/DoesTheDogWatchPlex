@@ -1,4 +1,4 @@
-from apis.plex import write_data
+from modules.plex import write_data
 import json
 from tqdm import tqdm
 

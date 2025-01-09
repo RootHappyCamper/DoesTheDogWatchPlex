@@ -1,0 +1,6 @@
+## This file is an template remove the .template to use the file
+plex:
+    token: #################### # your API token - find here https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
+    url : #################### # the URL at which your server can be accessed
+dtdd:
+    key: #################### #Found on your profile page https://www.doesthedogdie.com/profile

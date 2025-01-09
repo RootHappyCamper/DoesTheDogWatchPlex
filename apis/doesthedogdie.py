@@ -2,9 +2,12 @@ import urllib.parse
 import requests
 # import time
 import json
+# import yaml
 
 try:
-    from config import dtdd_api_key
+    from loadconfig import load_config_yaml
+    config_data = load_config_yaml()
+    dtdd_api_key = config_data['dtdd']['key']
     api_headers = {'Accept' :'application/json', 'X-API-KEY': dtdd_api_key}
     check_request = requests.get('https://www.doesthedogdie.com/dddsearch?q=old%20yeller', headers=api_headers)
     try:
@@ -19,14 +22,6 @@ except ImportError:
 
 base_string = "https://www.doesthedogdie.com/{media_id}"
 
-#def get_topics(media_id):
-#    resp = requests.get(base_string.format(media_id=media_id))
-#    soup = BeautifulSoup(resp.text, 'lxml')
-#    try:
-#        return(soup.find("div", {"id": "topics"}).select('.topicRow'))
-#    except AttributeError:
-#        print("❌ Could not find topics for {}".format(media_id))
-#        return []
 
 def get_topics_api(media_id):
     resp = requests.get(base_string.format(media_id=media_id), headers=api_headers)

@@ -1,9 +1,11 @@
 from apis.doesthedogdie import get_info_for_movie
 from apis.plex import get_movies_and_format
+from loadconfig import load_config_yaml
 import json
 import requests
 import urllib.parse
 import argparse
+import yaml
 
 from tqdm import tqdm
 #Arguement Parsing
@@ -29,6 +31,11 @@ def yes_or_no_formatter(topic):
         action = "No"
     return "{topic} : {action} (Yes: {yes_votes} | No : {no_votes})\n".format(topic=topic['topic'], yes_votes=topic['yes_votes'], no_votes=topic['no_votes'], action=action), action, topic['topic_short']
 
+#def load_config_yaml():
+#    with open('config.yml', 'r') as file:
+#        config_data = yaml.safe_load(file)
+#    return config_data
+
 def main():
     movies_to_process=0
     movies_found=0
@@ -40,11 +47,11 @@ def main():
         if args.update_all is not True:
             if movie['has_tag'] == "True":
                 if args.verbose:
-                    print("Movie " + movie['title'] + " already has content warning. Skipping...")
+                    print(f"Movie {movie['title']} already has content warning. Skipping...")
                 continue
         movies_to_process += 1
         if args.verbose:
-            print("Running get info for movie on " + movie['title'])
+            print(f"Running get info for movie on {movie['title']}")
         movie['dtdd'] = get_info_for_movie(movie['title'])
         movie['statuses'] = []
         if movie['dtdd'] != None:
@@ -56,7 +63,7 @@ def main():
         to_write.append(movie)
 
     # all we need to do now is chuck it in a big ol' json file
-    print("Found " + str(movies_found) + " Movies out of " + str(movies_to_process))
+    print(f"Found {movies_found} Movies out of {movies_to_process}")
     print("✏ Writing to JSON file")
     with open("movies.json", "w") as f:
         f.write(json.dumps(to_write, indent=4))

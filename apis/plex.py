@@ -1,8 +1,26 @@
 from plexapi.server import PlexServer
+from loadconfig import load_config_yaml
+#import yaml
+#from config import token, url
+plex_url = None
+plex_token = None
 
-from config import token, url
-
-plex = PlexServer(url, token)
+try: #Try importing keys and url from YAML configuration.
+    import yaml
+    config_data = load_config_yaml()
+    plex_token = config_data['plex']['token']
+    if plex_token == None:
+        raise Exception("The token retrieved from the YAML file is empty!")
+    plex_url = config_data['plex']['url']
+    if plex_url == None:
+        raise Exception("The token retrieved from the YAML file is empty!")
+    plex = PlexServer(plex_url, plex_token)
+except Exception as e:
+    print(f"Ran into exception... Something is wrong with Plex loading configuration from YAML {e}" )
+    exit(1)
+except:
+    print("Ran into an unknown exception while importing yaml configuration file for Plex...")
+    exit(1)
 
 def get_movie_libraries():
 #    plex_library_list = plex.library.sections()
@@ -11,8 +29,8 @@ def get_movie_libraries():
 
 def get_movies(library_id):
     movie_list = []
-    print("Requesting movies from {}".format(library_id))
     working_library = plex.library.sectionByID(library_id)
+    print("Requesting movies from {}".format((str(working_library).split(':')[2]).replace(">","").replace("-"," ")))
     for video in working_library.search():
         movie_list.append(video)
     return movie_list
@@ -30,7 +48,7 @@ def get_movies_and_format():
                 has_tag = "False"
             movies.append(dict(library=library, key=movie.key, title=movie.title, desc=movie.summary, has_tag = has_tag))
             movie_counter += 1
-    print("Grabbed " + str(movie_counter) + " movies from Plex. " + str(has_tag_counter) + " of them already have content warnings.")
+    print(f"Grabbed {movie_counter} movies from Plex. {has_tag_counter} of them already have content warnings.")
     return movies
 
 

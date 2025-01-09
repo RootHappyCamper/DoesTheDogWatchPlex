@@ -23,9 +23,9 @@ The Web API is provided directly by [DoesTheDogDie.com](https://www.doesthedogdi
 
 ## How to get started (CLI tools)
 
-0. Install python 3.4+ and create a virtual environment for this
+0. Install python 3.12+ and create a virtual environment for this
 1. Execute `pip install -r requirements.txt`
-2. Copy config.py.example to config.py, and fill out the data with what is relevant to your setup
+2. Copy config.yml.template to config.yml, and fill out the data with what is relevant to your setup
 3. Execute `python build_json.py`, and sit back and wait for the movies.json file to be generated 
 4. Once this file is generated, check over it, and **make a Plex Media Server database backup** (from this point on, all metadata changes will be permanent to your server)
 5. Run `python write_to_plex.py`
